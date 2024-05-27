@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs "nodejs"
+    }
+
+    environment {
+        CI = 'true'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from Git
+                git 'https://github.com/chirayuds/cicd-next.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Install dependencies
+                sh 'npm install'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build the project
+                sh 'npm run build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests
+                sh 'npm test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deploy to your hosting platform
+                // Example: Deploy to Vercel (requires Vercel CLI)
+                sh 'vercel --prod'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
